@@ -1,0 +1,35 @@
+// Colours
+// Colors
+$pimary: #4555d2;
+$secondary: #cc2973;
+$dark: #191e47;
+$light: #f9fafe;
+$body-color: #494c52;
+$headings-color: $dark;
+
+// Buttons
+$button-radius: 5px;
+$button-padding-x: 20px;
+$button-padding-y: 5px;
+
+$btn-border-radius: $button-radius;
+$btn-border-radius-sm: $button-radius;
+$btn-border-radius-lg: $button-radius;
+$btn-padding-y: $button-padding-y;
+$btn-padding-y-lg: $button-padding-y;
+$btn-padding-y-sm: $button-padding-y;
+$btn-padding-x: $button-padding-x;
+$btn-padding-x-lg: $button-padding-x;
+$btn-padding-x-sm: $button-padding-x;
+
+@import "bootstrap/scss/bootstrap.scss";
+
+.navbar-sticky {
+    background-color: #fff;
+    opacity: 0.8;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.navbar {
+    transition: all 0.5s ease-in-out;
+}
