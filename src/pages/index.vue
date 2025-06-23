@@ -15,7 +15,7 @@ const brand = import.meta.env.VITE_APP_BRAND;
     <!-- About -->
     <BContainer class="root-container-details" fluid="lg">
         <BRow class="justify-content-md-center align-items-center">
-            <BCol sm="12" md="4" lg="3">
+            <BCol sm="6" offset-sm="3" md="4" offset-md="0" lg="3">
                 <BCard class="blog-card pt-2 mb-4 mx-4">
                     <BCardBody>
                         <BRow class="text-center">
@@ -28,7 +28,7 @@ const brand = import.meta.env.VITE_APP_BRAND;
                     </BCardBody>
                 </BCard>
             </BCol>
-            <BCol sm="6" md="4" lg="3">
+            <BCol sm="6" offset-sm="3" md="4" offset-md="0" lg="3">
                 <BCard class="blog-card mb-4 mx-4">
                     <BCardBody>
                         <BRow class="text-center">
@@ -44,7 +44,7 @@ const brand = import.meta.env.VITE_APP_BRAND;
 
                 </BCard>
             </BCol>
-            <BCol sm="6" md="4" lg="3">
+            <BCol sm="6" offset-sm="3" md="4" offset-md="0" lg="3">
                 <BCard class="blog-card pt-2 mb-4 mx-4">
                     <BCardBody>
                         <BRow class="text-center">
@@ -55,7 +55,7 @@ const brand = import.meta.env.VITE_APP_BRAND;
                     </BCardBody>
                 </BCard>
             </BCol>
-            <BCol sm="6" md="4" lg="3">
+            <BCol sm="6" offset-sm="3" md="4" offset-md="0" lg="3">
                 <BCard class="blog-card pt-2 mb-4 mx-4">
                     <BCardBody>
                         <BRow class="text-center">
@@ -70,11 +70,11 @@ const brand = import.meta.env.VITE_APP_BRAND;
     </BContainer fluid="sm">
     <BContainer class="root-container-details">
         <BRow class="justify-content-center">
-            <BCol md="5" offset-md="1">
-                <h2>Don't have an account?<br> Join us today!  <router-link :to="{ name: 'Register'}"><BButton>Register</BButton></router-link></h2>
+            <BCol sm="6" offset-sm="2" md="4" offset-md="1" class="mb-3">
+                <h2>Don't have an account?<br> Join us today!  <router-link :to="{ name: 'Register'}"><BButton variant="primary">Register</BButton></router-link></h2>
             </BCol>
-            <BCol md="5">
-                <h2>Have a question? <router-link :to="{ name: 'Contact'}"><BButton>Contact Us</BButton></router-link></h2>
+            <BCol sm="6" offset-sm="2" md="4" offset-md="1" class="mb-3">
+                <h2>Have a question?<br> Let us know!  <router-link :to="{ name: 'Contact'}"><BButton variant="primary">Contact Us</BButton></router-link></h2>
             </BCol>
         </BRow>
     </BContainer>

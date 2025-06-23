@@ -140,7 +140,7 @@ async function performDelete() {
     </BContainer>
     <BContainer fluid="sm">
         <BRow class="justify-content-md-center">
-            <BCol v-for="blog,bindex in blogs" md="6" lg="5" xl="4" class="mx-2">
+            <BCol v-for="blog,bindex in blogs" sm="8" offset-sm="2" md="6" lg="5" xl="4" class="mx-2">
                 <BCard class="my-4" img-top :img-src="blog.images[0]" img-alt="image" img-height="300" style="min-width: 418px;max-width: 418px;" >
                     <BCardTitle>
                         <BRow>
@@ -159,7 +159,6 @@ async function performDelete() {
                     <BRow class="justify-content-center">
                         <BButtonGroup>
                             <BButton @click="openBlog(blog)" variant="primary">
-                                <!-- <RouterLink :to="{ name: 'BlogEdit', params: {blogName: blog.name }}" class="text-white text-decoration-none"><IBiDoorOpen height="20" width="20" /> Open</RouterLink> -->
                                 <IBiDoorOpen height="20" width="20" /> Open
                             </BButton>
                         <BButton @click="editBlog(bindex)" variant="info"><IBiPencilSquare height="20" width="20"/> Edit</BButton>
