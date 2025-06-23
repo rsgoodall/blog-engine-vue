@@ -1,21 +1,22 @@
 <script setup lang="ts">
+const brand = import.meta.env.VITE_APP_BRAND;
 </script>
 
 <template>
     <!-- Heading -->
-    <BContainer class="root-container-header">
+    <BContainer class="root-container-header" fluid="sm">
         <BRow class="justify-content-md-center">
-            <BCol>
-                <h1>Welcome to MultiBlog...</h1>
+            <BCol sm="10" offset-sm="3" md="6" offset-md="2">
+                <h1>Welcome to {{ brand }}...</h1>
             </BCol>
         </BRow>
     </BContainer>
 
     <!-- About -->
     <BContainer class="root-container-details" fluid="lg">
-        <BRow class="justify-content-md-center">
-            <BCol md="3">
-                <BCard class="pt-2">
+        <BRow class="justify-content-md-center align-items-center">
+            <BCol sm="12" md="4" lg="3">
+                <BCard class="blog-card pt-2 mb-4 mx-4">
                     <BCardBody>
                         <BRow class="text-center">
                             <IBiPeople class="h1"/>
@@ -27,8 +28,8 @@
                     </BCardBody>
                 </BCard>
             </BCol>
-            <BCol md="3">
-                <BCard>
+            <BCol sm="6" md="4" lg="3">
+                <BCard class="blog-card mb-4 mx-4">
                     <BCardBody>
                         <BRow class="text-center">
                             <a href="https://vuejs.org/" target="_blank">
@@ -43,8 +44,8 @@
 
                 </BCard>
             </BCol>
-            <BCol md="3">
-                <BCard class="pt-2">
+            <BCol sm="6" md="4" lg="3">
+                <BCard class="blog-card pt-2 mb-4 mx-4">
                     <BCardBody>
                         <BRow class="text-center">
                             <a href="https://getbootstrap.com/" target="_blank"><IBiBootstrap class="h1"/></a>
@@ -54,8 +55,8 @@
                     </BCardBody>
                 </BCard>
             </BCol>
-            <BCol md="3">
-                <BCard class="pt-2">
+            <BCol sm="6" md="4" lg="3">
+                <BCard class="blog-card pt-2 mb-4 mx-4">
                     <BCardBody>
                         <BRow class="text-center">
                             <IBiHddRack class="h1" />
@@ -66,24 +67,34 @@
                 </BCard>
             </BCol>
         </BRow>
+    </BContainer fluid="sm">
+    <BContainer class="root-container-details">
+        <BRow class="justify-content-center">
+            <BCol md="5" offset-md="1">
+                <h2>Don't have an account?<br> Join us today!  <router-link :to="{ name: 'Register'}"><BButton>Register</BButton></router-link></h2>
+            </BCol>
+            <BCol md="5">
+                <h2>Have a question? <router-link :to="{ name: 'Contact'}"><BButton>Contact Us</BButton></router-link></h2>
+            </BCol>
+        </BRow>
     </BContainer>
 </template>
 
 <style lang="css" scoped>
 .root-container-header {
     margin-top: 100px;
+    margin-bottom: 100px;
 }
 
 .root-container-details {
-    margin-block: 100px;
+    margin-block: 50px;
 }
 
 .blog-card {
-    margin-top: 20px;
     margin-right: 20px;
-    max-width: 300px;
-    min-width: 300px;
-    height: 150px;
+    max-width: 260px;
+    min-width: 260px;
+    height: 220px;
 }
 
 .logo {

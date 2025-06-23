@@ -1,10 +1,7 @@
 import { defineStore } from 'pinia';
 import { useLocalStorage } from '@vueuse/core';
 import router from '../router';
-import axios from 'axios';
-import { apiClient } from '@/services/Common';
-// import type { User, Blog, Post} from '../types';
-// import Messages from '~/helpers';
+import { apiClient } from '../services/Common';
 
 export const useAuthStore = defineStore('auth', () => {
 
@@ -22,28 +19,11 @@ export const useAuthStore = defineStore('auth', () => {
             password: password
         }
 
-        apiClient.post('/auth/login', payload ,{ withCredentials: true})
-        // axios.post(import.meta.env.VITE_APP_API_URL + '/auth/login', payload ,{ withCredentials: true, headers: { }})
-        .then((response) => {
-            if (response.status === 200) {
-                user.value.name = response.data.user.name;
-                user.value.userId = response.data.user._id;
-                user.value.role = response.data.user.role;
-                user.value.blogs = [];
-                router.push('/home');
-            } else {
-                console.error(response.statusText);
-                //Messages.error(response.statusText);
-            }
-        })
-        .catch((error) => {
-            console.error(error.message);
-            //Messages.error(error.message);
-        })
+        return apiClient.post('/auth/login', payload ,{ withCredentials: true});
     }
 
     function logout() {
-        axios.delete(import.meta.env.VITE_APP_API_URL + '/auth/logout', { withCredentials: true})
+        apiClient.delete('/auth/logout', { withCredentials: true})
         .then((response) => {
             if (response.status === 200) {
                 token.value = '';
@@ -56,25 +36,52 @@ export const useAuthStore = defineStore('auth', () => {
             } else {
                 // something else happend
                 console.error(response.statusText);
-                //Messages.error(response.statusText);
             }
         })
         .catch((error) => {
             console.error(error.message);
-            //Messages.error(error.message);
         })
     }
 
+    function forgotPassword(email: string) {
+        const payload = {
+            email: email
+        }
+        return apiClient.post('/auth/forgot-password', payload);
+    }
+
+    function resetPassword(token: string, email: string, password: string) {
+        const payload = {
+            token: token,
+            email: email,
+            password: password
+        }
+        return apiClient.post('/auth/reset-password', payload);
+    }
+
+    function verifyEmail(email: string, token: string) {
+        const payload = {
+            email: email,
+            verificationToken: token
+        }
+        return apiClient.post('/auth/verify-email', payload);
+    }
+    function register(name: string, email: string, password: string) {
+        const payload = {
+            name: name,
+            email: email,
+            password: password
+        }
+        return apiClient.post('/auth/register', payload);
+    }
+    
     return {
         user,
         login,
         logout,
-        // getBlogs,
-        // getMyBlogs,
-        // updateBlog,
-        // getPosts,
-        // updatePosts,
-        // getUsers,
-        // updateUser
+        forgotPassword,
+        resetPassword,
+        verifyEmail,
+        register
     }
 })

@@ -1,11 +1,24 @@
 <script setup lang="ts">
 import { ref, reactive, onBeforeMount, nextTick } from 'vue';
+import { useToastController } from 'bootstrap-vue-next';
 import AdminService from '../../services/AdminService';
 import BlogService from '../../services/BlogService';
 import dateformat from 'dateformat';
 import type {TableFieldRaw} from 'bootstrap-vue-next';
 import UserCard from '../../components/UserCard.vue';
 import { User, Blog } from '../../types';
+
+/**
+ * Toast Message
+ */
+ const {show} = useToastController();
+function toastMessage(type: any, message: string) {
+    show?.({props: {
+        body: message,
+        variant: type,
+        bodyClass: "text-center"
+    }})
+}
 
 const users = ref<User[]>([]);
 
@@ -96,13 +109,13 @@ function loadUsers() {
         }
     })
     .catch((error) => {
-        console.log("error: ", error.message);
+        toastMessage("danger", error.message);
     })
 }
 
 function loadBlogs() {
     blogs.value = [];
-    BlogService.getBlogs()
+    BlogService.getBlogsAdmin()
     .then((response) => {
         if (response.status === 200) {
             for (let i = 0; i < response.data.blogs.length; i++) {
@@ -120,7 +133,7 @@ function loadBlogs() {
         }
     })
     .catch((error) => {
-        console.log("error: ", error.message);
+        toastMessage("danger", error.message);
     })
 }
 

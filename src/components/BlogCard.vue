@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, reactive } from 'vue';
+import { ref, watch, reactive, computed } from 'vue';
 import slugify from 'slugify';
 import VuePictureCropper, { cropper } from 'vue-picture-cropper'; 
 import { BvTriggerableEvent } from 'bootstrap-vue-next';
@@ -59,7 +59,7 @@ function titleChange(value: string) {
 //     })
 // }
 
-async function ok(e: BvTriggerableEvent) {
+async function ok(e: Event) {
     if (result.dataURL !== '') {
         if (localBlog.value.images.length === 0) {
             localBlog.value.images.push(result.dataURL);
@@ -207,9 +207,16 @@ function ready() {
 }
 
 function clearExisting() {
-    console.log("localBlog: ", localBlog);
     localBlog.value.images.splice(0,1);
 }
+
+const okDisabled = computed(() => {
+    if (localBlog.value.title !== '' && localBlog.value.name !== '' && localBlog.value.description !=='') {
+        return false;
+    } else {
+        return true;
+    }
+})
 </script>
 
 <template>
@@ -217,7 +224,11 @@ function clearExisting() {
         id="editBlogModal"
         v-model="props.visible"
         centered
-        ok-title="Save" class="modal-xl" @ok.prevent="ok">
+        ok-title="Save"
+        class="modal-xl" 
+        @ok.prevent="ok"
+        :ok-disabled="okDisabled"
+        >
         <template v-if="localBlog.id === '0'" #title>
             New Blog
         </template>

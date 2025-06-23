@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { MdEditor } from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 import { BvTriggerableEvent, useToastController } from 'bootstrap-vue-next';
@@ -62,14 +62,9 @@ function titleChange(value: string) {
     localPost.value.slug = slugify(value, { lower: true, strict: true });
 }
 
-async function ok(e: BvTriggerableEvent) {
-    if (localPost.value.title === '' || localPost.value.content === '') {
-        e.stopPropagation();
-        return;
-    } else {
-        if (localSelectedCategory.value !== "" && localSelectedCategory.value !== null) {
-            localPost.value.category = localSelectedCategory.value;
-        }
+async function ok(e: Event) {
+    if (localSelectedCategory.value !== "" && localSelectedCategory.value !== null) {
+        localPost.value.category = localSelectedCategory.value;
     }
     if (localPost.value.id === '0') {
         const payload = {
@@ -107,7 +102,6 @@ async function ok(e: BvTriggerableEvent) {
             toastMessage("danger", error.message);
         })
     }
-    console.log("postcard: editPost");
     emit('editPost');
 }
 
@@ -126,13 +120,24 @@ const onUploadImg = async (files, callback) => {
     );
     callback(res.map((item) => item.data.image));
 }
+
+const okDisabled = computed(() => {
+    if (localPost.value.title !== '' && localPost.value.content !== '') {
+        return false;
+    } else {
+        return true;
+    }
+})
 </script>
 
 <template>
     <BModal
         v-model="props.visible"
         centered
-        ok-title="Save" class="modal-xl" @ok="ok">
+        ok-title="Save"
+        class="modal-xl"
+        @ok="ok"
+        :ok-disabled="okDisabled">
         <template v-if="localPost.id === '0'" #title>
             New Post
         </template>

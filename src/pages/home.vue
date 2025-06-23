@@ -51,15 +51,11 @@ function loadMyBlogs() {
                 }
             })
         } else {
-            toastMessage("error", response.statusText);
-            // console.error(response.statusText);
-            //Messages.error(response.statusText);
+            toastMessage("danger", response.statusText);
         }
     })
     .catch((error) => {
-        toastMessage("error", error.message);
-        console.error(error.message);
-        //Messages.error(error.message);
+        toastMessage("danger", error.message);
     });
 }
 
@@ -110,7 +106,7 @@ function deleteBlog(index: number) {
 }
 
 function openBlog(blog: Blog) {
-    router.push({ name: 'BlogEdit', params: {blogName: blog.name }});
+    router.push({ name: 'Blog', params: {blogName: blog.name }});
 }
 
 async function performDelete() {
@@ -128,9 +124,9 @@ async function performDelete() {
 }
 </script>
 <template>
-    <BContainer>
+    <BContainer fluid="sm">
         <BRow class="justify-content-md-center">
-            <BCol cols="6">
+            <BCol md="6">
                 <BCard class="home-new-blog-container border-0">
                     <BCardText v-if="blogs.length === 0" class="text-center">
                         <h3>You don't have any blogs yet, create one </h3><BButton class="btn w-40" variant="primary" @click="editBlog(-1)">New Blog</BButton>
@@ -141,15 +137,17 @@ async function performDelete() {
                 </BCard>
             </BCol>
         </BRow>
+    </BContainer>
+    <BContainer fluid="sm">
         <BRow class="justify-content-md-center">
-            <BCol v-for="blog,bindex in blogs" cols="4">
-                <BCard class="my-5" img-top :img-src="blog.images[0]" img-alt="image" img-height="300" style="min-width: 418px;" >
+            <BCol v-for="blog,bindex in blogs" md="6" lg="5" xl="4" class="mx-2">
+                <BCard class="my-4" img-top :img-src="blog.images[0]" img-alt="image" img-height="300" style="min-width: 418px;max-width: 418px;" >
                     <BCardTitle>
                         <BRow>
-                            <BCol cols="10">
+                            <BCol xs="8" md="9" lg="10">
                                 {{ blog.title }}
                             </BCol>
-                            <BCol cols="2">
+                            <BCol xs="4" md="3" lg="2">
                                 <IBiTrash class="text-danger ms-3" v-b-tooltip.hover.top="'Delete Blog'" @click="deleteBlog(bindex)"/>
                             </BCol>
                         </BRow>

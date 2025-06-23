@@ -26,7 +26,6 @@ function closeDialog() {
 }
 
 function ok() {
-    console.log("submitHandler");
     emit('editCategories', localCategories.value);
     hide();
 }
@@ -39,7 +38,6 @@ function addItem() {
 }
 
 function deleteItem(index: number) {
-    console.log("deleteItem: ", index);
     localCategories.value.splice(index,1);
 
 }

@@ -4,8 +4,14 @@ export default {
     getBlog(blogName: string) {
         return apiClient.get(`/blogs/name/${blogName}`);
     },
+    getMyBlog(blogName: string) {
+        return apiClient.get(`/blogs/getMyBlog/${blogName}`, {withCredentials: true})
+    },
     getBlogs() {
         return apiClient.get('/blogs');
+    },
+    getBlogsAdmin() {
+        return apiClient.get('/blogs/admin', { withCredentials: true});
     },
     getPosts(blogId: string) {
         return apiClient.get(`/blogs/${blogId}/posts`);
@@ -17,7 +23,6 @@ export default {
         return apiClient.get('/blogs/getMyBlogs', { withCredentials: true});
     },
     createBlog(payload: any) {
-        console.log("createBlog: ",payload);
         return apiClient.post('/blogs', payload, { withCredentials: true}); 
     },
     deleteBlog(blogId: string) {
@@ -46,5 +51,8 @@ export default {
     },
     deleteComment(blogId: string, postId: string, commentId: string) {
         return apiClient.delete(`/blogs/${blogId}/posts/${postId}/comments/${commentId}`, {withCredentials: true});
+    },
+    contact(payload: any) {
+        return apiClient.post(`/contact`, payload);
     }
 };

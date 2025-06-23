@@ -1,7 +1,21 @@
 <script setup lang="ts">
 import { ref, onBeforeMount, nextTick } from 'vue';
+import { useToastController } from 'bootstrap-vue-next';
 import { Blog } from '../types';
 import BlogService from '../services/BlogService';
+const brand = import.meta.env.VITE_APP_BRAND;
+
+/**
+ * Toast Message
+ */
+ const {show} = useToastController();
+function toastMessage(type: any, message: string) {
+    show?.({props: {
+        body: message,
+        variant: type,
+        bodyClass: "text-center"
+    }})
+}
 
 const blogs = ref<Blog[]>([])
 
@@ -29,7 +43,7 @@ function submitSearch() {
         }
     })
     .catch((error) => {
-        console.log("error:", error);
+        toastMessage("danger", error.message);
     })
 }
 </script>
@@ -39,10 +53,10 @@ function submitSearch() {
     <BContainer class="search-container-header">
         <BRow class="justify-content-md-center">
             <BCol cols="8">
-                <h1>Search MultiBlog...</h1>
+                <h1>Search {{ brand }}...</h1>
             </BCol>
         </BRow>
-        <BRow class="justify-content-md-center">
+        <BRow class="justify-content-center">
             <BCol cols="6" class="my-5">
                 <BForm @submit.prevent="submitSearch">
                     <BInputGroup>
@@ -54,9 +68,11 @@ function submitSearch() {
                 </BForm>
             </BCol>
         </BRow>
-        <BRow v-if="blogs.length !== 0" class="justify-content-md-center">
-            <BCol cols="4" v-for="blog in blogs">
-                <BCard class="my-5" img-top :img-src="blog.images[0]" img-alt="image" img-height="300" style="min-width: 418px;max-width: 418px;">
+    </BContainer>
+    <BContainer fluid="sm">
+        <BRow v-if="blogs.length !== 0" class="justify-content-center">
+            <BCol v-for="blog in blogs" md="6" lg="5" xl="4" class="mx-1">
+                <BCard class="my-3" img-top :img-src="blog.images[0]" img-alt="image" img-height="300" style="min-width: 418px;max-width: 418px;">
                     <BCardTitle>
                         <BRow>
                             <BCol cols="10">
@@ -70,7 +86,7 @@ function submitSearch() {
                     <BRow class="justify-content-center">
                         <BButtonGroup>
                             <BButton variant="primary">
-                                <RouterLink :to="{ name: 'BlogView', params: {blogName: blog.name }}" class="text-white text-decoration-none"><IBiDoorOpen height="20" width="20" /> Open</RouterLink>
+                                <RouterLink :to="{ name: 'Blog', params: {blogName: blog.name }}" class="text-white text-decoration-none"><IBiDoorOpen height="20" width="20" /> Open</RouterLink>
                             </BButton>
                         </BButtonGroup>
                     </BRow>

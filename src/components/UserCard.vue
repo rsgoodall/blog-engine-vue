@@ -34,7 +34,7 @@ const props = defineProps({
 const localUser = ref(props.user);
 const roles = ref<string[]>(["user","admin"]);
 
-function ok(e: BvTriggerableEvent) {
+function ok(e: Event) {
     const payload = {
         id: localUser.value.id,
         name: localUser.value.name,
@@ -75,11 +75,11 @@ function ok(e: BvTriggerableEvent) {
                     Name
                 </template>
                 <BFormInput id="floatingName" class="mb-3" v-model="localUser.name" placeholder="Enter name" required />
-                <BFormInvalidFeedback :state="localUser.name.length > 3">Title needs to be at least 3 characters</BFormInvalidFeedback>
+                <BFormInvalidFeedback :state="localUser.name.length > 3">Name needs to be at least 3 characters</BFormInvalidFeedback>
             </BFormFloatingLabel>
             <BFormFloatingLabel label-for="floatingEmail" class="my-2">
                 <template #label>
-                    Name
+                    Email
                 </template>
                 <BFormInput id="floatingEmail" type="email" class="mb-3" v-model="localUser.email" placeholder="Enter email" required />
             </BFormFloatingLabel>

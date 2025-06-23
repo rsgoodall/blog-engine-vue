@@ -4,7 +4,7 @@ import { MdPreview } from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 import { useRoute, useRouter } from 'vue-router';
 import { useToastController, usePopoverController } from 'bootstrap-vue-next';
-import { ref, reactive, onBeforeMount, onMounted, watch  } from 'vue';
+import { ref, reactive, onBeforeMount, onUpdated, watch  } from 'vue';
 import BlogService from '../../services/BlogService';
 import PostCard from '../../components/PostCard.vue';
 import CommentCard from '../../components/CommentCard.vue';
@@ -35,6 +35,7 @@ const userList = ref<UserMap[]>([])
 const filteredPosts = ref<Post[]>([]);
 const numPosts = ref(0);
 const blogUrl = ref("");
+const pageMode = ref("blog");
 
 /**
  * Toast Message
@@ -53,49 +54,57 @@ function toastMessage(type: any, message: string) {
  */
  function filterPosts() {
     filteredPosts.value = [];
-    if (!props.category && !props.tag && !props.sort && !props.search) {
-        filteredPosts.value = posts.value;
-    } else {
-        if (props.search) {
-            posts.value.forEach(post => {
-                if (post.title.includes(props.search) || post.content.includes(props.search)) {
-                    filteredPosts.value.push(post);
-                }
-            })
+    if (pageMode.value === 'blog') {
+        if (!props.category && !props.tag && !props.sort && !props.search) {
+            filteredPosts.value = posts.value;
         } else {
-            if (props.category) {
+            if (props.search) {
                 posts.value.forEach(post => {
-                    if (post.category === props.category) {
+                    if (post.title.includes(props.search) || post.content.includes(props.search)) {
                         filteredPosts.value.push(post);
                     }
-                });
-            }
-            if (props.tag) {
-                posts.value.forEach(post => {
-                    if (post.tags.includes(props.tag)) {
-                        filteredPosts.value.push(post);
-                    }
-                });
-            }
-            if (props.sort) {
-                if (filteredPosts.value.length === 0) {
-                    filteredPosts.value = posts.value;
+                })
+            } else {
+                if (props.category) {
+                    posts.value.forEach(post => {
+                        if (post.category === props.category) {
+                            filteredPosts.value.push(post);
+                        }
+                    });
                 }
-                if (props.sort === 'asc') {
-                    let sort = filteredPosts.value.sort((objA: any, objB: any) => new Date(objA.createdAt) - new Date(objB.createdAt));
-                } else {
-                    let sort = filteredPosts.value.sort((objA: any, objB: any) => 
-                        new Date(objB.createdAt) - new Date(objA.createdAt)
-                    );
+                if (props.tag) {
+                    posts.value.forEach(post => {
+                        if (post.tags.includes(props.tag)) {
+                            filteredPosts.value.push(post);
+                        }
+                    });
+                }
+                if (props.sort) {
+                    if (filteredPosts.value.length === 0) {
+                        filteredPosts.value = posts.value;
+                    }
+                    if (props.sort === 'asc') {
+                        let sort = filteredPosts.value.sort((objA: any, objB: any) => new Date(objA.createdAt) - new Date(objB.createdAt));
+                    } else {
+                        let sort = filteredPosts.value.sort((objA: any, objB: any) => 
+                            new Date(objB.createdAt) - new Date(objA.createdAt)
+                        );
+                    }
                 }
             }
         }
+    } else {
+        posts.value.forEach(post => {
+            if (post.slug === route.params.post) {
+                filteredPosts.value.push(post);
+            }
+        })
     }
 }
 
 const searchText = ref("")
 function submitSearch() {
-    router.push({ name: 'BlogEdit', params: { blogName: blog.name }, query: {search: searchText.value}});
+    router.push({ name: 'Blog', params: { blogName: blog.name }, query: {search: searchText.value}});
 }
 
 watch (
@@ -122,10 +131,24 @@ watch (
     }
 )
 
+watch (
+    () => route.params, (params) => {
+        if (route.path.split('/').at(-2) === 'posts') {
+            pageMode.value = "posts";
+        } else {
+            pageMode.value = "blog";
+        }
+        filterPosts();
+    }
+)
+
 /**
  * On load
  */
  onBeforeMount(() => {
+    if (route.path.split('/').at(-2) === 'posts') {
+        pageMode.value = "posts"
+    }
     loadBlog();
 });
 
@@ -141,9 +164,6 @@ function loadBlog() {
             blog.images = response.data.blog[0].images;
             blog.isEnabled = response.data.blog[0].isEnabled;
             blogUrl.value = import.meta.env.VITE_APP_PUBLIC_URL + `/blogs/${blog.name}`;
-        } else {
-            // back to index
-            // Messages.error(response.statusText);
         }
     })
     .then(() => {
@@ -151,8 +171,6 @@ function loadBlog() {
     })
     .catch((error) => {
         router.push({ name: 'Blog404'})
-        //router.push('/blogs/404');
-        console.log("blog error");
     })
 }
 
@@ -287,7 +305,7 @@ function performDeletePost() {
 /**
  * Copy links to clipboard
  */
- function blogLink() {
+function blogLink() {
     useClipboard().copy(blogUrl.value);
     toastMessage("success","Link copied!");
  }
@@ -317,12 +335,8 @@ const editCommentData = ref<Comment>({
 
 function editComment (postIndex: number, commentIndex: number) {
     editCommentPostIndex.value = postIndex;
-    //editCommentIndex.value = commentIndex;
     editCommentPostId.value = posts.value[postIndex].id;
     if (commentIndex === -1) {
-        console.log("editComment: new comment")
-        // editCommentContent.value = "";
-        // editCommentId.value = "0"
         editCommentData.value._id = '0';
         editCommentData.value.content = '';
         editCommentData.value.user = '';
@@ -330,21 +344,14 @@ function editComment (postIndex: number, commentIndex: number) {
         editCommentData.value.updatedAt = '';
 
     } else {
-        console.log("editComment: edit")
-        //editCommentContent.value = posts.value[postIndex].comments[commentIndex].content;
         editCommentId.value = posts.value[postIndex].comments[commentIndex]._id;
         editCommentData.value = posts.value[postIndex].comments[commentIndex];
-        console.log("editCommentContent: ", posts.value[postIndex].comments[commentIndex].content)
     }
-    console.log("id:",editCommentId.value,"comment:",editCommentContent.value)
     commentCardVisible.value = true;
 
 }
 
 async function finishEditComment() {
-    console.log("finishEditComment")
-    //editCommentContent.value = "";
-    console.log("finish editCommentContent:",editCommentContent.value);
     loadPosts();
 }
 
@@ -378,9 +385,9 @@ function performDeleteComment() {
 <template>
     <BContainer v-if="isReady" fluid class="blog-container">
         <BRow>
-            <BCol cols="9">
+            <BCol fluid="md" md="8" lg="9">
                 <div class="mx-4">
-                    <h1 class="display-4">{{ blog.title }} <a href="javascript:void(0)" @click="blogLink"><IBiLink style="height: 2rem; width: 2rem;" v-b-tooltip.hover.top="'Copy Link'"/></a></h1>
+                    <h1 class="display-4"><router-link :to="{ name: 'Blog', params: { blogName: blog.name}}">{{ blog.title }}</router-link> <a href="javascript:void(0)" @click="blogLink"><IBiLink style="height: 2rem; width: 2rem;" v-b-tooltip.hover.top="'Copy Link'"/></a></h1>
                     <p class="lead">{{ blog.description }}</p>
                     <hr />
                     <div v-for="post,pindex in filteredPosts">
@@ -412,7 +419,7 @@ function performDeleteComment() {
                                 <div class="text-start">
                                     {{ dateformat(comment.createdAt) }} {{ userList.find(x => x.id === comment.user).name }} said:
                                 </div>
-                                <div class="text-end">
+                                <div v-if="(comment.user === store.user.userId) || (store.user.blogs.includes(blog.id))" class="text-end">
                                     <IBiTrash 
                                         class="text-danger ms-4"
                                         @click="deleteComment(pindex,cindex)"
@@ -426,7 +433,7 @@ function performDeleteComment() {
                                     <MdPreview v-model="comment.content" />
                                 </BCardBody>
                             </BCard>
-                            <div class="d-flex align-items-end flex-column">
+                            <div v-if="store.user.userId !== ''" class="d-flex align-items-end flex-column">
                                 <BButton @click="editComment(pindex, -1)">Add Comment</BButton>
                             </div>
                         </BCard>
@@ -434,25 +441,35 @@ function performDeleteComment() {
                     </div>
                 </div>
             </BCol>
-            <BCol cols="3">
+            <BCol md="4" lg="3">
                 <div class="me-4">
                     <BImg  class="rounded-2 mb-4" fluid-grow :src="blog.images[0]" />
                     <BCard class="mb-4">
-                        <div class="d-flex align-item-center">
-                        <BButton v-if="store.user.blogs.includes(blog.id)" @click="editPost(-1)" class="bg-primary me-1">New Post</BButton>
-                        <router-link :to="{ name: 'BlogEdit', params: { blogName: blog.name } }"><BButton class="bg-primary me-1">Clear Filters</BButton></router-link>
-                        <router-link :to="{ name: 'BlogEdit', params: { blogName: blog.name }, query: { sort: 'asc' } }"><BButton class="bg-primary me-1">Sort Asc</BButton></router-link>
-                        <router-link :to="{ name: 'BlogEdit', params: { blogName: blog.name }, query: { sort: 'dsc'}}"><BButton class="bg-primary">Sort Dsc</BButton></router-link>
+                        <div class="d-flex gap-2 align-item-center">
+                        <IBiPlusSquare 
+                            v-if="store.user.blogs.includes(blog.id)"
+                            @click="editPost(-1)" 
+                            class="text-primary mt-1"
+                            v-b-tooltip.hover.top="'New Post'"/>
+                        <router-link :to="{ name: 'Blog', params: { blogName: blog.name } }">
+                            <IBiFilter class="blog-icon" v-b-tooltip.hover.top="'Clear Filters'"/>
+                        </router-link>
+                        <router-link :to="{ name: 'Blog', params: { blogName: blog.name }, query: { sort: 'asc' } }" >
+                            <IBiSortUp class="blog-icon" v-b-tooltip.hover.top="'Date Ascending'"/>
+                        </router-link>
+                        <router-link :to="{ name: 'Blog', params: { blogName: blog.name }, query: { sort: 'dsc'}}" >
+                            <IBiSortDown class="blog-icon" v-b-tooltip.hover.top="'Date Descending'"/>
+                        </router-link>
                         </div>
                     </BCard>
                     <BCard class="mb-4">
                         <BCardTitle>Search</BCardTitle>
                         <BCardBody>
-                            <BForm @submit="submitSearch">
+                            <BForm @submit.prevent="submitSearch">
                                 <BInputGroup>
                                     <BFormInput v-model="searchText" type="text" placeholder="Search..." required/>
                                     <template #append>
-                                        <BButton class="bg-primary"><IBiSearch /></BButton>
+                                        <BButton class="bg-primary" type="submit"><IBiSearch /></BButton>
                                     </template>
                                 </BInputGroup>
                             </BForm>
@@ -462,17 +479,17 @@ function performDeleteComment() {
                         <BCardTitle>Categories</BCardTitle>
                         <BCardBody>
                             <div v-for="cat in categoriesList">
-                                <router-link :to="{ name: 'BlogEdit', params: { blogName: blog.name }, query: {  category: cat }}">{{ cat }}</router-link>
+                                <router-link :to="{ name: 'Blog', params: { blogName: blog.name }, query: {  category: cat }}">{{ cat }}</router-link>
                             </div>
                         </BCardBody>
-                        <BButton v-if="store.user.name !== ''" @click="categoriesCardVisible = true" class="bg-primary">Edit Categories</BButton>
+                        <BButton v-if="store.user.blogs.includes(blog.id)" @click="categoriesCardVisible = true" class="bg-primary">Edit Categories</BButton>
                     </BCard>
                     <BCard>
                         <BCardTitle>Tags</BCardTitle>
                         <BCardBody>
-                            <div v-for="tag in tags">
-                                <router-link :to="{ name: 'BlogEdit', params: { blogName: blog.name}, query: { tag: tag }}">
-                                    <BBadge>{{ tag }}</BBadge>
+                            <div>
+                                <router-link v-for="tag in tags" :to="{ name: 'Blog', params: { blogName: blog.name }, query: { tag: tag }}">
+                                    <BBadge class="m-1">{{ tag }}</BBadge>
                                 </router-link>
                             </div>
                         </BCardBody>
@@ -524,5 +541,10 @@ function performDeleteComment() {
 <style lang="css" scoped>
 .blog-container {
     margin-block: 75px;
+}
+
+.blog-icon {
+    margin-bottom: 15x;
+    margin-right: 3px;
 }
 </style>

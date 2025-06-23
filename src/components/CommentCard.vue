@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { MdEditor } from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 import BlogService from '../services/BlogService';
@@ -42,8 +42,7 @@ const props = defineProps({
     }
 })
 
-async function ok(e: BvTriggerableEvent) {
-    console.log("comment: ok");
+async function ok(e: Event) {
     if (props.comment.content === '') {
         e.stopPropagation();
         return;
@@ -52,7 +51,6 @@ async function ok(e: BvTriggerableEvent) {
         content: props.comment.content
     }
     if (props.comment._id === '0') {
-        console.log("creating comment")
         await BlogService.createComment(props.blogId, props.postId, payload)
         .then((response) => {
             if (response.status === 200) {
@@ -64,7 +62,6 @@ async function ok(e: BvTriggerableEvent) {
         })
 
     } else {
-        console.log("editting comment")
         await BlogService.updateComment(props.blogId, props.postId, props.comment._id, payload)
         .then((response) => {
             if (response.status === 200) {
@@ -97,13 +94,24 @@ const onUploadImg = async (files, callback) => {
     );
     callback(res.map((item) => item.data.image));
 }
+
+const okDisabled = computed(() => {
+    if (props.comment.content !== '') {
+        return false;
+    } else {
+        return true;
+    }
+})
 </script>
 
 <template>
     <BModal
         v-model="props.visible"
         centered
-        ok-title="Save" class="modal-xl" @ok="ok">
+        ok-title="Save"
+        class="modal-xl"
+        @ok="ok"
+        :ok-disabled="okDisabled">
         <template v-if="props.comment._id === '0'" #title>
             New Comment
         </template>

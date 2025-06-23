@@ -1,5 +1,34 @@
-# Vue 3 + TypeScript + Vite
+## Blog Engine Vue
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+### Intro
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+This is the front end for Blog Engine.
+
+It uses VueJS v3 styled with vue-bootstrap-next.
+
+### Config
+
+To get this project going create a .env file and set values for the parameters below:
+
+```
+VITE_APP_API_URL=
+VITE_APP_PUBLIC_URL=
+VITE_APP_BRAND=
+VITE_APP_REG_ENABLED=
+
+```
+
+### Run
+
+To run simply:
+
+1. Clone the repo
+2. Run "pnpm install"
+3. Run "pnpm run dev"
+
+### Build
+
+To package for production:
+
+1. Run "pnpm build"
+2. Create an archive of the dist folder and deploy to your web server.

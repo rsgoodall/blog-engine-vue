@@ -5,7 +5,6 @@ const {show} = useToastController();
  * Toast Message
  */
 export function toastMessage(type: any, message: string) {
-    console.log("toastMessage");
     // show?.({props: {
     //     body: message,
     //     variant: type,

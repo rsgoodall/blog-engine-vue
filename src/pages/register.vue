@@ -1,31 +1,72 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
+import { useToastController } from 'bootstrap-vue-next';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores';
+import { MdPreview } from 'md-editor-v3';
+import 'md-editor-v3/lib/style.css';
+const store = useAuthStore();
+const router = useRouter();
 
 interface RegisterForm {
     name: string
     email: string
     password: string
+    acceptTerms: boolean
 }
 
 const form = ref<RegisterForm>({
     name: "",
     email: "",
-    password: ""
+    password: "",
+    acceptTerms: false
 })
-const submitHandler = (event: Event) => {
-    console.log(submitHandler, event);
+
+/**
+ * Toast Message
+ */
+ const {show} = useToastController();
+function toastMessage(type: any, message: string) {
+    show?.({props: {
+        body: message,
+        variant: type,
+        bodyClass: "text-center"
+    }})
 }
 
+const submitHandler = (event: Event) => {
+    store.register(form.value.name, form.value.email, form.value.password)
+    .then((response) => {
+        if (response.status === 201) {
+            toastMessage("success", "Registered. Verify your email before login.")
+            router.push('/login')
+        }
+    })
+    .catch((error) => {
+        toastMessage("danger", error.message);
+    })
+
+}
+onMounted(async () => {
+    const response = await fetch("/TermsOfUse.md");
+    termsAndConditions.value = await response.text();
+})
+
+const registrationEnabled = ref<boolean>(import.meta.env.VITE_APP_REG_ENABLED.toLowerCase() === 'true');
+
 const passwordValidation = computed(() => form.value.password.length > 5);
+const registerBtnEnabled = computed(() => form.value.name !== '' && form.value.email !== '' && form.value.password !== '' && form.value.acceptTerms);
+
+const termsAndConditions = ref("");
 </script>
 <template>
     <BContainer flex>
         <BRow class="register-form justify-content-md-center">
-            <BCol cols="6">
+            <BCol sm="10" md="6" lg="8" xl="8">
                 <BCard>
                     <BCardTitle>Register</BCardTitle>
-                    <BCardBody>
-                        <BForm @submit="submitHandler">
+                    <BCardBody v-if="registrationEnabled">
+                        <BForm @submit.prevent="submitHandler">
                             <BFormFloatingLabel label-for="floatingName" class="my-2">
                                 <template #label>
                                     <IBiPerson />
@@ -63,10 +104,29 @@ const passwordValidation = computed(() => form.value.password.length > 5);
                                     required />
                                 <BFormInvalidFeedback :state="passwordValidation">Password needs to be at least 8 characters</BFormInvalidFeedback>
                             </BFormFloatingLabel>
+                            <BRow class="my-2">
+                                <BCol>
+                                    <BFormCheckbox v-model="form.acceptTerms" required>
+                                    I accept the Terms of Use
+                                    </BFormCheckbox>
+                                    <BFormInvalidFeedback :state="form.acceptTerms">You must accept Terms of Use</BFormInvalidFeedback>
+                                </BCol>
+                                <BCol class="d-flex flex-column align-items-end">
+                                    <BButton v-b-toggle.termsAndConditions variant="secondary">Show Terms of Use</BButton>
+                                </BCol>
+                            </BRow>
+                            <BCollapse id="termsAndConditions" class="my-2">
+                                <BCard>
+                                    <MdPreview v-model="termsAndConditions" />
+                                </BCard>
+                            </BCollapse>
                             <div class="d-grid gap-2">
-                                <BButton variant="primary" type="submit">Register</BButton>
+                                <BButton variant="primary" type="submit" :disabled="!registerBtnEnabled">Register</BButton>
                             </div>
                         </BForm>
+                    </BCardBody>
+                    <BCardBody v-else>
+                        <h1>Registration is currently closed<br>Come back later</h1>
                     </BCardBody>
                 </BCard>
             </BCol>
