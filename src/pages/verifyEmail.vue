@@ -31,7 +31,6 @@ const form = ref<VerifyEmailForm>({
 });
 
 const submitHandler = (event: Event) => {
-    console.log("submitHandler");
     store.verifyEmail(props.email, props.token)
     .then((response) => {
         if (response.status === 200) {
@@ -53,7 +52,7 @@ onMounted(() => {
 
 <template>
     <BContainer>
-        <BRow align-h="center" class="justify-content-md-center">
+        <BRow align-h="center" class="justify-content-center">
             <BCol cols="6">
                 <BCard class="verify-email-card">
                     <BCardTitle><IBiEnvelope class="verify-email-icon" /> Verify Email</BCardTitle>

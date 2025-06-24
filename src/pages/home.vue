@@ -125,7 +125,7 @@ async function performDelete() {
 </script>
 <template>
     <BContainer fluid="sm">
-        <BRow class="justify-content-md-center">
+        <BRow class="justify-content-center">
             <BCol md="6">
                 <BCard class="home-new-blog-container border-0">
                     <BCardText v-if="blogs.length === 0" class="text-center">
@@ -139,15 +139,15 @@ async function performDelete() {
         </BRow>
     </BContainer>
     <BContainer fluid="sm">
-        <BRow class="justify-content-md-center">
-            <BCol v-for="blog,bindex in blogs" sm="8" offset-sm="2" md="6" lg="5" xl="4" class="mx-2">
+        <BRow class="justify-content-center">
+            <BCol v-for="blog,bindex in blogs" xs="10" sm="8" md="6" offset-md="0" lg="4" xxl="3" offset-xxl="0" class="me-6">
                 <BCard class="my-4" img-top :img-src="blog.images[0]" img-alt="image" img-height="300" style="min-width: 418px;max-width: 418px;" >
                     <BCardTitle>
                         <BRow>
-                            <BCol xs="8" md="9" lg="10">
+                            <BCol sm="8" md="9" lg="10">
                                 {{ blog.title }}
                             </BCol>
-                            <BCol xs="4" md="3" lg="2">
+                            <BCol sm="4" md="3" lg="2">
                                 <IBiTrash class="text-danger ms-3" v-b-tooltip.hover.top="'Delete Blog'" @click="deleteBlog(bindex)"/>
                             </BCol>
                         </BRow>

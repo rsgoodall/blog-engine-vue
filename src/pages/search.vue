@@ -51,7 +51,7 @@ function submitSearch() {
 <template>
     <!-- Heading -->
     <BContainer class="search-container-header">
-        <BRow class="justify-content-md-center">
+        <BRow class="justify-content-center">
             <BCol cols="8">
                 <h1>Search {{ brand }}...</h1>
             </BCol>
@@ -71,7 +71,7 @@ function submitSearch() {
     </BContainer>
     <BContainer fluid="sm">
         <BRow v-if="blogs.length !== 0" class="justify-content-center">
-            <BCol v-for="blog in blogs" md="6" lg="5" xl="4" class="mx-1">
+            <BCol v-for="blog in blogs" sm="8" md="6" offset-md="0" lg="4" xxl="3" offset-xxl="0" class="me-6">
                 <BCard class="my-3" img-top :img-src="blog.images[0]" img-alt="image" img-height="300" style="min-width: 418px;max-width: 418px;">
                     <BCardTitle>
                         <BRow>
@@ -93,7 +93,7 @@ function submitSearch() {
                 </BCard>
             </BCol>
         </BRow>
-        <BRow v-else class="justify-content-md-center">
+        <BRow v-else class="justify-content-center">
             <BCol cols="4">
                 <h3>No results</h3>
             </BCol>

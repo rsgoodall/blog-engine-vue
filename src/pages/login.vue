@@ -70,8 +70,8 @@ const passwordValidation = computed(() => form.value.password.length > 5);
 
 <template>
     <BContainer>
-        <BRow align-h="center" class="justify-content-md-center">
-            <BCol sm="10" md="6" xl="4">
+        <BRow align-h="center" class="justify-content-center">
+            <BCol sm="10" md="8" lg="8" xl="6">
                 <BCard class="login-card">
                     <BCardTitle><IBiPerson class="login-icon"/>Log In</BCardTitle>
                     <BCardBody>

@@ -387,7 +387,7 @@ function performDeleteComment() {
         <BRow>
             <BCol fluid="md" md="8" lg="9">
                 <div class="mx-4">
-                    <h1 class="display-4"><router-link :to="{ name: 'Blog', params: { blogName: blog.name}}">{{ blog.title }}</router-link> <a href="javascript:void(0)" @click="blogLink"><IBiLink style="height: 2rem; width: 2rem;" v-b-tooltip.hover.top="'Copy Link'"/></a></h1>
+                    <h1 class="display-4"><router-link class="text-decoration-none" :to="{ name: 'Blog', params: { blogName: blog.name}}">{{ blog.title }}</router-link> <a href="javascript:void(0)" @click="blogLink"><IBiLink style="height: 2rem; width: 2rem;" v-b-tooltip.hover.top="'Copy Link'"/></a></h1>
                     <p class="lead">{{ blog.description }}</p>
                     <hr />
                     <div v-for="post,pindex in filteredPosts">

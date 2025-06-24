@@ -1,6 +1,6 @@
 <template>
     <BContainer>
-        <BRow align-h="center" align-v="center" class="justify-content-md-center" style="margin-top: 200px;">
+        <BRow align-h="center" align-v="center" class="justify-content-center" style="margin-top: 200px;">
             <BCol cols="4">
                 <h1>404 Not Found</h1>
                 <p class="lead">

@@ -14,8 +14,8 @@ const brand = import.meta.env.VITE_APP_BRAND;
 
     <!-- About -->
     <BContainer class="root-container-details" fluid="lg">
-        <BRow class="justify-content-md-center align-items-center">
-            <BCol sm="6" offset-sm="3" md="4" offset-md="0" lg="3">
+        <BRow class="justify-content-center align-items-center">
+            <BCol sm="5" md="4" offset-md="0" xl="3">
                 <BCard class="blog-card pt-2 mb-4 mx-4">
                     <BCardBody>
                         <BRow class="text-center">
@@ -28,7 +28,7 @@ const brand = import.meta.env.VITE_APP_BRAND;
                     </BCardBody>
                 </BCard>
             </BCol>
-            <BCol sm="6" offset-sm="3" md="4" offset-md="0" lg="3">
+            <BCol sm="5" md="4" offset-md="0" xl="3">
                 <BCard class="blog-card mb-4 mx-4">
                     <BCardBody>
                         <BRow class="text-center">
@@ -44,7 +44,7 @@ const brand = import.meta.env.VITE_APP_BRAND;
 
                 </BCard>
             </BCol>
-            <BCol sm="6" offset-sm="3" md="4" offset-md="0" lg="3">
+            <BCol sm="5" md="4" offset-md="0" xl="3">
                 <BCard class="blog-card pt-2 mb-4 mx-4">
                     <BCardBody>
                         <BRow class="text-center">
@@ -55,7 +55,7 @@ const brand = import.meta.env.VITE_APP_BRAND;
                     </BCardBody>
                 </BCard>
             </BCol>
-            <BCol sm="6" offset-sm="3" md="4" offset-md="0" lg="3">
+            <BCol sm="5" md="4" offset-md="0" xl="3">
                 <BCard class="blog-card pt-2 mb-4 mx-4">
                     <BCardBody>
                         <BRow class="text-center">
