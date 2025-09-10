@@ -263,13 +263,14 @@ function editPost (postIndex: number) {
         editPostData.value.comments = [];
         editPostData.value.createdAt = '';
     } else {
-        editPostData.value.id = posts.value[postIndex].id;
-        editPostData.value.title = posts.value[postIndex].title;
-        editPostData.value.content = posts.value[postIndex].content;
-        editPostData.value.category = posts.value[postIndex].category;
-        editPostData.value.tags = posts.value[postIndex].tags;
-        editPostData.value.comments = posts.value[postIndex].comments;
-        editPostData.value.createdAt = posts.value[postIndex].createdAt;
+        editPostData.value.id = filteredPosts.value[postIndex].id;
+        editPostData.value.title = filteredPosts.value[postIndex].title;
+        editPostData.value.slug = filteredPosts.value[postIndex].slug;
+        editPostData.value.content = filteredPosts.value[postIndex].content;
+        editPostData.value.category = filteredPosts.value[postIndex].category;
+        editPostData.value.tags = filteredPosts.value[postIndex].tags;
+        editPostData.value.comments = filteredPosts.value[postIndex].comments;
+        editPostData.value.createdAt = filteredPosts.value[postIndex].createdAt;
     }
     postCardVisible.value = true;
 }
@@ -407,10 +408,13 @@ function performDeleteComment() {
                                     @click="editPost(pindex)"
                                     v-b-tooltip.hover.top="'Edit Post'"/>
                             </div>
-                            <BCardTitle>{{ post.title }} <a href="javascript:void(0)" @click="postLink(post)"><IBiLink v-b-tooltip.hover.top="'Copy Link'"/></a>
-                            </BCardTitle>
+                            <BCardTitle v-if="post.category !== ''">{{ post.category }}: {{ post.title }} <a href="javascript:void(0)" @click="postLink(post)"><IBiLink v-b-tooltip.hover.top="'Copy Link'"/></a></BCardTitle>
+                            <BCardTitle v-else>{{ post.title }} <a href="javascript:void(0)" @click="postLink(post)"><IBiLink v-b-tooltip.hover.top="'Copy Link'"/></a></BCardTitle>
                             <BCardBody>
-                                <MdPreview v-model="post.content" />
+                                <MdPreview v-model="post.content" language="en-US"/>
+                                <router-link v-for="tag in post.tags" :to="{ name: 'Blog', params: { blogName: blog.name }, query: { tag: tag }}">
+                                    <BBadge class="m-1">{{ tag }}</BBadge>
+                                </router-link>
                             </BCardBody>
                             <div class="text-end">
                                 {{ post.comments.length }} comments

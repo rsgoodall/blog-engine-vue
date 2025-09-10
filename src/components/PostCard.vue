@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onMounted, onUpdated, onBeforeUpdate } from 'vue';
 import { MdEditor } from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 import { BvTriggerableEvent, useToastController } from 'bootstrap-vue-next';
@@ -50,6 +50,12 @@ watch(
                 localSelectedCategory.value = props.post.category;
             } else {
                 localSelectedCategory.value = null;
+            }
+            if (props.post.slug !== "") {
+                localPost.value.slug = props.post.slug;
+            }
+            if (props.post.title === "") {
+                localPost.value.slug = "";
             }
         }
     }
